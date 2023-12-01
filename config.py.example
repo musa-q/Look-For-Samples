@@ -1,0 +1,8 @@
+import sqlite3
+from app.db import dbManager
+
+def start():
+    dbManager.createDb()
+
+class DISCOGS:
+    TOKEN = '' # token from https://www.discogs.com/developers

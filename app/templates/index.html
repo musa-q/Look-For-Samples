@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask and SQLite</title>
+  </head>
+  <body>
+    <h1>Build Web App Using Flask and SQLite</h1>
+    <button
+      class="btn"
+      type="button"
+      onclick="window.location.href='{{ url_for('addmusic') }}';"
+    >
+      Fill form to get updates</button
+    ><br />
+    <button
+      class="btn"
+      type="button"
+      onclick="window.location.href='{{ url_for('allmusic') }}';"
+    >
+      Check participant list
+    </button>
+  </body>
+</html>
