@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask and SQLite</title>
+  </head>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+    }
+  </style>
+  <body>
+    <table style="width: 100%">
+      <tr>
+        <th>#</th> <!-- Counter Column Header -->
+        <th>Song Name</th>
+        <th>Artist Name</th>
+        <th>Genre</th>
+        <th>Year Released</th>
+        <th>Styles</th>
+        <th>Country</th>
+        <th>Album Cover</th>
+      </tr>
+
+      {% for music in data %}
+      <tr>
+        <td>{{ loop.index }}</td> <!-- Counter Column -->
+        <td>{{ music[0] }}</td>
+        <td>{{ music[1] }}</td>
+        <td>{{ music[2] }}</td>
+        <td>{{ music[3] }}</td>
+        <td>{{ music[4] }}</td>
+        <td>{{ music[5] }}</td>
+        <td>{{ music[6] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

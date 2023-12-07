@@ -13,6 +13,14 @@ class db:
         self.cursor = self.connection.cursor()
         print(f"{ COLOR.GREEN}[Connected to database]{ COLOR.ENDC} {self.dbName}")
 
+    def disconnect(self):
+        try:
+            self.cursor.close()
+            self.connection.close()
+            print(f"{ COLOR.GREEN}[Successfully disconnected from database]{ COLOR.ENDC} {self.dbName}")
+        except:
+            print(f"{ COLOR.FAIL}[Error in disconnecting from database]{ COLOR.ENDC} {self.dbName}")
+
     def create(self):
         try:
             self.cursor.execute("CREATE TABLE tracks \
@@ -65,9 +73,13 @@ class db:
     def output(self):
         self.countRows()
         print(f"{ COLOR.HEADER}[OUTPUT]{ COLOR.ENDC}")
-        rows = self.cursor.execute("SELECT * FROM tracks").fetchall()
+        rows = self.getAllTracks()
         for idx, row in enumerate(rows):
             print(f"{COLOR.CYAN}[Row {idx + 1}]{COLOR.ENDC} {row}")
+
+    def getAllTracks(self):
+        rows = self.cursor.execute("SELECT * FROM tracks").fetchall()
+        return rows
 
     def countRows(self):
         try:
