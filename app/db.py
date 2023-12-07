@@ -1,34 +1,81 @@
 import sqlite3
+from config import  COLOR
+from track import Track
 
 class db:
     def __init__(self):
-        self.connection = sqlite3.connect("tracks.db")
-        self.cursor = self.connection.cursor()
+        self.dbName = "tracks.db"
+        self.connection = None
+        self.cursor = None
 
-    def createDb(self):
+    def connect(self):
+        self.connection = sqlite3.connect(self.dbName)
+        self.cursor = self.connection.cursor()
+        print(f"{ COLOR.GREEN}[Connected to database]{ COLOR.ENDC} {self.dbName}")
+
+    def create(self):
         try:
             self.cursor.execute("CREATE TABLE tracks \
-                       (song TEXT, artist TEXT, genre TEXT, year NUMBER, country TEXT, albumCover TEXT)")
-            print("[Created database]")
+                       (song TEXT, artist TEXT, genre TEXT, year NUMBER, styles TEXT, country TEXT, albumCover TEXT)")
+            print(f"{ COLOR.BLUE}[Created database]{ COLOR.ENDC}")
         except sqlite3.OperationalError:
-            print("[Skipping] Database exists already")
+            print(f"{ COLOR.WARNING}[Skipping]{ COLOR.ENDC} Database exists already")
         except Exception as e:
-            print(f"[Error] Creating database\n{e}")
+            print(f"{ COLOR.FAIL}[Error]{ COLOR.ENDC} Creating database\n{e}")
 
-
-    def addRow(self, rowJson):
+    def reset(self):
         try:
-            self.cursor.execute("INSERT INTO tracks VALUES (?, ?, ?, ?, ?, ?)",
-                                (rowJson['song'], rowJson['artist'], rowJson['genre'], rowJson['year'], rowJson['country'], rowJson['albumCover']))
-            self.connection.commit()
-            print("[Row inserted]")
+            self.cursor.execute("DROP TABLE IF EXISTS tracks")
+            print(f"{COLOR.BLUE}[Database table dropped]{COLOR.ENDC}")
+            self.create()
         except Exception as e:
-            print(f"[Error] Inserting row\n{e}")
+            print(f"{COLOR.FAIL}[Error]{COLOR.ENDC} Restarting database\n{e}")
 
-    def printDb(self):
-        print("[OUTPUT]")
+    def addRow(self, trackObj, commit=False):
+        rowData = trackObj.getData()
+        if self.checkExisting(rowData['songName'], rowData['artist']):
+            try:
+                self.cursor.execute("INSERT INTO tracks VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                    (rowData['songName'], rowData['artist'], rowData['genre'], rowData['year'], rowData['styles'], rowData['country'], rowData['albumCover']))
+                if commit:
+                    self.connection.commit
+                # print(f"{ COLOR.GREEN}[Row]{ COLOR.ENDC} inserted")
+            except Exception as e:
+                print(f"{ COLOR.FAIL}[Error]{ COLOR.ENDC} Inserting row\n{e}")
+        else:
+            print(f"{ COLOR.WARNING}[Error]{ COLOR.ENDC} Track already exists in database")
+
+    def checkExisting(self, songName, artistName):
+        try:
+            query = "SELECT COUNT(*) FROM tracks WHERE song = ? AND artist = ?"
+            params = (songName, artistName)
+
+            self.cursor.execute(query, params)
+            result = self.cursor.fetchone()
+
+            if result and result[0] == 0: # No matching records
+                return True
+            else:
+                return False
+
+        except Exception as e:
+            print(f"{ COLOR.FAIL}[Error]{ COLOR.ENDC} Checking existing record\n{e}")
+            return False
+
+    def output(self):
+        self.countRows()
+        print(f"{ COLOR.HEADER}[OUTPUT]{ COLOR.ENDC}")
         rows = self.cursor.execute("SELECT * FROM tracks").fetchall()
-        for row in rows:
-            print(row)
+        for idx, row in enumerate(rows):
+            print(f"{COLOR.CYAN}[Row {idx + 1}]{COLOR.ENDC} {row}")
+
+    def countRows(self):
+        try:
+            self.cursor.execute("SELECT COUNT(*) FROM tracks")
+            count = self.cursor.fetchone()[0]
+            print(f"{COLOR.CYAN}[Total Rows: {count}]{COLOR.ENDC}")
+        except Exception as e:
+            print(f"{COLOR.FAIL}[Error]{COLOR.ENDC} Counting rows\n{e}")
 
 dbManager = db()
+dbManager.connect()

@@ -1,9 +1,6 @@
-import sys
-sys.path.append('..')
-
 import time
 import discogs_client
-from config import DISCOGS
+from config import DISCOGS, COLOR
 
 class DiscogsAccess:
     def __init__(self):
@@ -12,10 +9,10 @@ class DiscogsAccess:
 
     def getTracks(self, startPage=1, endPage=5, timeout=1):
         tracks = []
-        for page in range(startPage, endPage):
+        for page in range(startPage, endPage+1):
             results = self.discogsClient.search(type='release', page=page)
             tracks.extend(results.page(1))
-            print(f"[Page retrieved] Page : {page}")
+            print(f"{COLOR.BLUE}[Page retrieved]{COLOR.ENDC} Page : {page}")
             time.sleep(timeout)
         return tracks
 
