@@ -127,7 +127,6 @@ temp.txt
 temp.py
 
 # Environments
-config.py
 .env
 .venv
 env/
