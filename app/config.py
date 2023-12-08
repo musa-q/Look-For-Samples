@@ -1,3 +1,6 @@
+import time
+import sys
+
 class COLOR:
     HEADER = '\033[95m'
     BLUE = '\033[94m'
@@ -8,3 +11,13 @@ class COLOR:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+def loadingBar(duration):
+    interval = 1
+    increments = duration // interval
+    for i in range(increments):
+        sys.stdout.write('\r')
+        sys.stdout.write(f"[{'=' * (i + 1)}{' ' * (increments - i - 1)}] {COLOR.HEADER}{i * interval}/{duration}{COLOR.ENDC} seconds")
+        sys.stdout.flush()
+        time.sleep(interval)
+    sys.stdout.write('\n')
