@@ -10,7 +10,7 @@ class DiscogsAccess:
         self.allTracks = []
         load_dotenv('./app/.env')
 
-    def setup(self):
+    def login(self):
         consumerKey = os.getenv('DISCOGS_CONSUMER_KEY')
         consumerSecret = os.getenv('DISCOGS_CONSUMER_SECRET')
         userAgent = os.getenv('DISCOGS_USER_AGENT')
@@ -74,3 +74,7 @@ class DiscogsAccess:
     def searchTracks(self, searchItem, searchType='release'):
         results = self.discogsClient.search(searchItem, type=searchType)
         return results
+
+
+discogsManager = DiscogsAccess()
+discogsManager.login()

@@ -1,13 +1,12 @@
 import sqlite3
 import time
-from discogsAccess import DiscogsAccess
+from discogsAccess import discogsManager
 import json
 from config import COLOR
 from track import Track
 from db import dbManager
 
 def get_tracks(startPage=1, endPage=5):
-    discogsManager = DiscogsAccess()
     tracks = discogsManager.getTracks(startPage=startPage, endPage=endPage)
     return tracks
 
