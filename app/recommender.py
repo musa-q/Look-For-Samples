@@ -1,65 +1,83 @@
 import pandas as pd
-import sqlite3
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
+import sqlite3
 import numpy as np
-import re
-
+from config import COLOR
 
 '''''
 Make it that it gives random ones at first then looks at history and recommends
 Rather than just looking at current song
 '''''
+
 class Recommender:
     def __init__(self):
         self.df = None
-        self.df_encoded = None
-        self.data = self.get_data()
-        self.items = self.df['id'].tolist()
-        self.similarity_matrix = cosine_similarity(self.data)
+        self.dfEncoded = None
+        self.similarity_matrix = None
+        self.userPreferences = {}
 
-    def get_data(self):
-        with sqlite3.connect("./music.db") as conn:
-            self.df = pd.read_sql_query("SELECT * FROM MUSIC", conn)
+    def setup(self):
+        connection = sqlite3.connect("../tracks.db")
+        df = pd.read_sql_query("SELECT * FROM tracks", connection)
+        connection.close()
+        print(f"{COLOR.GREEN}[Gathered data from database]{COLOR.ENDC}")
+        self.df = df.copy()
+        self.dfEncoded = df.copy()
+        label_encoder = LabelEncoder()
+        self.dfEncoded['artist'] = label_encoder.fit_transform(self.dfEncoded['artist'])
+        self.dfEncoded['genre'] = label_encoder.fit_transform(self.dfEncoded['genre'])
+        self.dfEncoded['styles'] = label_encoder.fit_transform(self.dfEncoded['styles'])
+        self.dfEncoded['country'] = label_encoder.fit_transform(self.dfEncoded['country'])
 
-            self.df_encoded = self.df.copy()
+        # Scale Year
+        scaler = StandardScaler()
+        self.dfEncoded['year_scaled'] = scaler.fit_transform(self.dfEncoded[['year']])
 
-        self.df_encoded['artist_name'] = self.df_encoded['artist_name'].apply(lambda x: re.sub(r'\s*\(\d+\)$', '', x))
+        # One-Hot Encoding
+        onehot_encoder = OneHotEncoder()
+        encoded_features = onehot_encoder.fit_transform(self.dfEncoded[['genre', 'styles', 'country']]).toarray()
 
-        one_hot = pd.get_dummies(self.df_encoded['artist_name'])
-        self.df_encoded = self.df.join(one_hot)
+        # Combine Scaled Year with Encoded Features
+        final_features = np.hstack((encoded_features, self.dfEncoded[['year_scaled']].values))
 
-        one_hot = pd.get_dummies(self.df_encoded['year_released'])
-        self.df_encoded = self.df.join(one_hot)
+        # Calculate cosine similarity with the updated features
+        self.similarity_matrix = cosine_similarity(final_features)
 
-        self.df_encoded= self.df_encoded.drop(columns=['artist_name', 'year_released'])
+    def update_user_preferences(self, user_id, song_name, like_dislike):
+        if user_id not in self.user_preferences:
+            self.user_preferences[user_id] = {'likes': [], 'dislikes': []}
 
-        self.df_encoded['styles'] = self.df_encoded['styles'].str.split(', ')
-        styles_dummies = self.df_encoded['styles'].apply(lambda x: pd.Series([1]*len(x), index=x)).fillna(0, downcast='infer')
-        self.df_encoded = pd.concat([self.df_encoded.drop('styles', axis=1), styles_dummies], axis=1)
+        if like_dislike == 'like':
+            self.user_preferences[user_id]['likes'].append(song_name)
+        elif like_dislike == 'dislike':
+            self.user_preferences[user_id]['dislikes'].append(song_name)
 
-        self.df_encoded['genre'] = self.df_encoded['genre'].str.split(', ')
-        styles_dummies = self.df_encoded['genre'].apply(lambda x: pd.Series([1]*len(x), index=x)).fillna(0, downcast='infer')
-        self.df_encoded = pd.concat([self.df_encoded.drop('genre', axis=1), styles_dummies], axis=1)
+    def recommend_based_on_preferences(self, user_id, top_n):
+        if user_id not in self.user_preferences:
+            print(f"{COLOR.FAIL}[Error]{COLOR.ENDC} No user preferences found")
+            return
 
-        self.df_encoded['country_released'] = self.df_encoded['country_released'].str.split('& ')
-        styles_dummies = self.df_encoded['country_released'].apply(lambda x: pd.Series([1]*len(x), index=x)).fillna(0, downcast='infer')
-        self.df_encoded = pd.concat([self.df_encoded.drop('country_released', axis=1), styles_dummies], axis=1)
-        self.df_encoded = self.df_encoded.drop(columns=['', 'song_name', 'image_cover_link', 'youtube_link'])
+        liked_songs = self.user_preferences[user_id]['likes']
+        disliked_songs = self.user_preferences[user_id]['dislikes']
 
-        return self.df_encoded.drop('id', axis=1)
+        recommendations = []
+        for song in liked_songs:
+            if song in self.df['song'].values:
+                song_index = self.df[self.df['song'] == song].index[0]
+                similar_songs = sorted(list(enumerate(self.similarity_matrix[song_index])), key=lambda x: x[1], reverse=True)[1:top_n+1]
+                for i, score in similar_songs:
+                    recommended_song = self.df.iloc[i]['song']
+                    if recommended_song not in liked_songs and recommended_song not in disliked_songs:
+                        recommendations.append(recommended_song)
+                        if len(recommendations) >= top_n:
+                            break
+                if len(recommendations) >= top_n:
+                    break
 
-    def recommend_items(self, user_id, top_k):
-        user_id += 1
-        similarity_scores = self.similarity_matrix[user_id]
-        sorted_indices = np.argsort(similarity_scores)[::-1]
-        top_k_indices = sorted_indices[:top_k]
+        print(f"{COLOR.GREEN}Recommendations for user {user_id}: {recommendations}{COLOR.ENDC}")
 
-        return [self.items[i] for i in top_k_indices]
 
-    def recommend_dissimilar_items(self, user_id, top_k):
-        user_id += 1
-        similarity_scores = self.similarity_matrix[user_id]
-        sorted_indices = np.argsort(similarity_scores)
-        top_k_indices = sorted_indices[:top_k]
+recommenderManager = Recommender()
+recommenderManager.setup()
 
-        return [self.items[i] for i in top_k_indices]
