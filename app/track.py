@@ -25,11 +25,21 @@ class Track:
         self.yearReleased = track.year if track.year != 0 else 2000
         self.countryReleased = track.country
         self.imageCoverLink = track.data['cover_image']
+        self.youtubeLink = self.getYouTubeLink(track)
         # self.youtubeLink = track.videos[0].data['uri']
         styles = track.data['style']
         genre = track.data['genre']
         self.serializedStyles = json.dumps(styles)
         self.serializedGenre = json.dumps(genre)
+
+    def getYouTubeLink(self, track):
+        for vid in track.videos:
+            # print("Song:",self.songName)
+            # print("Vid:",vid.data['title'])
+            if self.songName in vid.data['title']:
+                print(True)
+                return vid.data['uri']
+        return None
 
     def getData(self):
         return {
@@ -40,4 +50,5 @@ class Track:
             'styles' : self.serializedStyles,
             'country' : self.countryReleased,
             'albumCover' : self.imageCoverLink,
+            'youtubeLink' : self.youtubeLink
         }
