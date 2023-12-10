@@ -10,33 +10,24 @@ import os
 
 app = Flask(__name__)
 
+@app.before_request
+def before_request():
+    g.db = dbManager.connect()
+
+@app.teardown_request
+def teardown_request(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        dbManager.disconnect()
 
 @app.route("/")
 @app.route('/home')
 def index():
     return render_template("index.html")
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect("tracks.db")
-    return db
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-def get_all_tracks():
-    cursor = get_db().cursor()
-    rows = cursor.execute("SELECT * FROM tracks").fetchall()
-    cursor.close()
-    return rows
-
 @app.route('/view-all-tracks')
 def view_all_tracks():
-    all_tracks = get_all_tracks()
+    all_tracks = dbManager.getAllTracks()
     return render_template("viewAllTracks.html", data=all_tracks)
 
 # @app.route('/add', methods=['GET', 'POST'])

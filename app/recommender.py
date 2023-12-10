@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import sqlite3
 import numpy as np
 from config import COLOR
+from db import dbManager
 
 '''''
 Make it that it gives random ones at first then looks at history and recommends
@@ -18,9 +19,7 @@ class Recommender:
         self.userPreferences = {}
 
     def setup(self):
-        connection = sqlite3.connect("../tracks.db")
-        df = pd.read_sql_query("SELECT * FROM tracks", connection)
-        connection.close()
+        df = pd.read_sql_query("SELECT * FROM tracks", dbManager.connection)
         print(f"{COLOR.GREEN}[Gathered data from database]{COLOR.ENDC}")
         self.df = df.copy()
         self.dfEncoded = df.copy()
