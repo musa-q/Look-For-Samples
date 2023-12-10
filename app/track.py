@@ -36,7 +36,6 @@ class Track:
     def getYouTubeLink(self, track):
         for vid in track.videos:
             if self.songName in vid.data['title']:
-                print(True)
                 return vid.data['uri']
         return None
 
