@@ -21,6 +21,9 @@ def populate(tracks, commit_interval=25):
         try:
             tempTrack = Track()
             tempTrack.extractData(musicTrack)
+            if tempTrack.youtubeLink == None:
+                continue
+
             dbManager.addRow(tempTrack)
 
             if (trackNum + 1) % commit_interval == 0:
@@ -35,7 +38,7 @@ def populate(tracks, commit_interval=25):
                 raise
 
     dbManager.connection.commit()
-    print(f"{COLOR.GREEN}[Committed]{COLOR.ENDC} remaining tracks to the database")
+    print(f"{COLOR.GREEN}[Committed]{COLOR.ENDC} Remaining tracks to the database")
 
 
 def populateTracks(startPage=1, endPage=5, commit_interval=25):
