@@ -24,7 +24,7 @@ class db:
     def create(self):
         try:
             self.cursor.execute("CREATE TABLE tracks \
-                       (song TEXT, artist TEXT, genre TEXT, year NUMBER, styles TEXT, country TEXT, albumCover TEXT, youtubeLink TEXT)")
+                       (id NUMBER, song TEXT, artist TEXT, genre TEXT, year NUMBER, styles TEXT, country TEXT, albumCover TEXT, youtubeLink TEXT)")
             print(f"{ COLOR.BLUE}[Created database]{ COLOR.ENDC}")
         except sqlite3.OperationalError:
             print(f"{ COLOR.WARNING}[Skipping]{ COLOR.ENDC} Database exists already")
@@ -43,8 +43,8 @@ class db:
         rowData = trackObj.getData()
         if self.checkExisting(rowData['songName'], rowData['artist']):
             try:
-                self.cursor.execute("INSERT INTO tracks VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                                    (rowData['songName'], rowData['artist'], rowData['genre'], rowData['year'], rowData['styles'], rowData['country'], rowData['albumCover'], rowData['youtubeLink']))
+                self.cursor.execute("INSERT INTO tracks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    (rowData['id'], rowData['songName'], rowData['artist'], rowData['genre'], rowData['year'], rowData['styles'], rowData['country'], rowData['albumCover'], rowData['youtubeLink']))
                 if commit:
                     self.connection.commit
                 # print(f"{ COLOR.GREEN}[Row]{ COLOR.ENDC} inserted")
@@ -88,6 +88,10 @@ class db:
             print(f"{COLOR.CYAN}[Total Rows: {count}]{COLOR.ENDC}")
         except Exception as e:
             print(f"{COLOR.FAIL}[Error]{COLOR.ENDC} Counting rows\n{e}")
+
+    def getRandomSong(self):
+        return self.cursor.execute("SELECT * FROM tracks ORDER BY RANDOM() LIMIT 1").fetchone()
+
 
 dbManager = db()
 dbManager.connect()
