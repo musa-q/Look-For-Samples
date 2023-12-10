@@ -3,6 +3,7 @@ import re
 
 class Track:
     def __init__(self):
+        self.id = None
         self.songName = None
         self.artistName = None
         self.yearReleased = None
@@ -13,6 +14,7 @@ class Track:
         self.serializedGenre = None
 
     def extractData(self, track):
+        self.id = track.id
         songText = track.title
         artistName = track.artists[0].name
         match = re.search(r'\s*-\s*(.+)$', songText)
@@ -26,7 +28,6 @@ class Track:
         self.countryReleased = track.country
         self.imageCoverLink = track.data['cover_image']
         self.youtubeLink = self.getYouTubeLink(track)
-        # self.youtubeLink = track.videos[0].data['uri']
         styles = track.data['style']
         genre = track.data['genre']
         self.serializedStyles = json.dumps(styles)
@@ -34,15 +35,13 @@ class Track:
 
     def getYouTubeLink(self, track):
         for vid in track.videos:
-            # print("Song:",self.songName)
-            # print("Vid:",vid.data['title'])
             if self.songName in vid.data['title']:
-                print(True)
                 return vid.data['uri']
         return None
 
     def getData(self):
         return {
+            'id' : self.id,
             'songName' : self.songName,
             'artist' : self.artistName,
             'genre' : self.serializedGenre,
