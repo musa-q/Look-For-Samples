@@ -14,7 +14,7 @@
             right: 0;
             z-index: 1;
             display: flex;
-            background-image: url({{ data[6] }});
+            background-image: url({{ data[7] }});
             filter: blur(8px);
             -webkit-filter: blur(8px);
             height: 99%;
@@ -99,8 +99,20 @@
 
     <div class="music-box">
         <h2>{{ data[2] }} - {{ data[1] }}</h2>
-        <iframe src="https://www.youtube.com/embed/{{ data[7][-11:] }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <input type="submit" name="decide_song_button" value="DOWNLOAD">
+        <!--
+            <iframe src="https://www.youtube.com/embed/{{ data[8][-11:] }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        -->
+        <iframe
+            src="https://www.youtube.com/embed/{{ data[8][-11:] }}?autoplay=1&controls=0&loop=1"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        <!--
+            <input type="submit" name="decide_song_button" value="DOWNLOAD">
+        -->
         <form method="POST">
             <div class="btn-group">
                 <input type="submit" name="decide_song_button" value="DISLIKE">
