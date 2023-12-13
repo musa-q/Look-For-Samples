@@ -33,13 +33,16 @@ def music():
     if request.method == 'POST':
         recommenderManager.updateUserPreferences(userId, currentSong[0], request.form['decide_song_button'].upper())
         recommendations = recommenderManager.recommendBasedOnPreferences(userId, 3)
-        currentSong = recommendations[0]
+        if recommendations == []:
+            currentSong = recommenderManager.randomSong(userId)
+        else:
+            currentSong = recommendations[0]
         response = make_response(render_template('music.html', data=currentSong))
         response.headers['Referrer-Policy'] = 'no-referrer'
         return response
 
     else:
-        currentSong = dbManager.getRandomSong()
+        currentSong = recommenderManager.randomSong(userId)
         response = make_response(render_template('music.html', data=currentSong))
         response.headers['Referrer-Policy'] = 'no-referrer'
         return response
