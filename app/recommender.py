@@ -16,7 +16,7 @@ class Recommender:
         self.df = None
         self.similarityMatrix = None
         self.userPreferences = {}
-        self.matrixFilename = "similarityMatrix.pkl"
+        # self.matrixFilename = "similarityMatrix.pkl"
 
     def setup(self):
         df = pd.read_sql_query("SELECT * FROM tracks", dbManager.connection)
