@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from config import COLOR
 from db import dbManager
+import joblib
 
 '''''
 Make it that it gives random ones at first then looks at history and recommends
@@ -13,34 +14,43 @@ Rather than just looking at current song
 class Recommender:
     def __init__(self):
         self.df = None
-        self.dfEncoded = None
         self.similarityMatrix = None
         self.userPreferences = {}
+        # self.matrixFilename = "similarityMatrix.pkl"
 
     def setup(self):
         df = pd.read_sql_query("SELECT * FROM tracks", dbManager.connection)
         print(f"{COLOR.GREEN}[Gathered data from database]{COLOR.ENDC}")
         self.df = df.copy()
-        self.dfEncoded = df.copy()
+        # try:
+        #     # Try to load the similarity matrix from a file
+        #     self.similarityMatrix = joblib.load(self.matrixFilename)
+        #     print(f"{COLOR.GREEN}[Loaded similarity matrix from file]{COLOR.ENDC} {self.matrixFilename}")
+        # except:
+        dfEncoded = df.copy()
         labelEncoder = LabelEncoder()
-        self.dfEncoded['artist'] = labelEncoder.fit_transform(self.dfEncoded['artist'])
-        self.dfEncoded['genre'] = labelEncoder.fit_transform(self.dfEncoded['genre'])
-        self.dfEncoded['styles'] = labelEncoder.fit_transform(self.dfEncoded['styles'])
-        self.dfEncoded['country'] = labelEncoder.fit_transform(self.dfEncoded['country'])
+        dfEncoded['artist'] = labelEncoder.fit_transform(dfEncoded['artist'])
+        dfEncoded['genre'] = labelEncoder.fit_transform(dfEncoded['genre'])
+        dfEncoded['styles'] = labelEncoder.fit_transform(dfEncoded['styles'])
+        dfEncoded['country'] = labelEncoder.fit_transform(dfEncoded['country'])
 
         # Scale Year
         scaler = StandardScaler()
-        self.dfEncoded['yearScaled'] = scaler.fit_transform(self.dfEncoded[['year']])
+        dfEncoded['yearScaled'] = scaler.fit_transform(dfEncoded[['year']])
 
         # One-Hot Encoding
         onehotEncoder = OneHotEncoder()
-        encodedFeatures = onehotEncoder.fit_transform(self.dfEncoded[['genre', 'styles', 'country']]).toarray()
+        encodedFeatures = onehotEncoder.fit_transform(dfEncoded[['genre', 'styles', 'country']]).toarray()
 
         # Combine Scaled Year with Encoded Features
-        finalFeatures = np.hstack((encodedFeatures, self.dfEncoded[['yearScaled']].values))
+        finalFeatures = np.hstack((encodedFeatures, dfEncoded[['yearScaled']].values))
 
         # Calculate cosine similarity with the updated features
         self.similarityMatrix = cosine_similarity(finalFeatures)
+
+            # joblib.dump(self.similarityMatrix, self.matrixFilename)
+            # print(f"{COLOR.GREEN}[Saved similarity matrix to file]{COLOR.ENDC} {self.matrixFilename}")
+
 
     def updateUserPreferences(self, userId, songId, likeDislike):
         if userId not in self.userPreferences:
@@ -76,6 +86,21 @@ class Recommender:
 
         print(f"{COLOR.GREEN}[Song recommendation created]{COLOR.ENDC}")
         return recommendations
+
+    def randomSong(self, userId):
+        try:
+            likedSongs = self.userPreferences[userId]['likes']
+            dislikedSongs = self.userPreferences[userId]['dislikes']
+        except KeyError:
+            likedSongs = {}
+            dislikedSongs = {}
+
+        while True:
+            song = dbManager.getRandomSong()
+            recommendedSongId = song[0]
+            if recommendedSongId not in likedSongs and recommendedSongId not in dislikedSongs:
+                return song
+
 
 
 recommenderManager = Recommender()
