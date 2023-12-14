@@ -2,25 +2,26 @@
 <html>
   <head>
     <title>Flask and SQLite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
   </head>
   <body>
-    <h1>Build Web App Using Flask and SQLite</h1>
+    <h1>Sample Tinder</h1>
 
     <button
-      class="btn"
+      class="test"
       type="button"
       onclick="window.location.href='{{ url_for('view_all_tracks') }}';"
     >
       Check participant list
     </button>
 
-    <button
-      class="btn"
+    <div
+      class="btn center"
       type="button"
       onclick="window.location.href='{{ url_for('music') }}';"
     >
       Get music
-    </button>
+  </div>
 
   </body>
 </html>

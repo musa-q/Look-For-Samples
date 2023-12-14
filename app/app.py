@@ -3,8 +3,9 @@ from recommender import recommenderManager
 from db import dbManager
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 userId = "user1"
+history = []
 
 @app.before_request
 def before_request():
@@ -30,19 +31,47 @@ def view_all_tracks():
 @app.route('/music', methods=['GET', 'POST'])
 def music():
     global currentSong
+    global recommendations
     if request.method == 'POST':
-        recommenderManager.updateUserPreferences(userId, currentSong[0], request.form['decide_song_button'].upper())
-        recommendations = recommenderManager.recommendBasedOnPreferences(userId, 3)
-        if recommendations == []:
+        if request.form['decide_song_button'].upper() == 'SKIP':
+            try:
+                for track in recommendations:
+                    if track not in history:
+                        currentSong = track
+                        history.append(currentSong)
+                        response = make_response(render_template('music.html', data=currentSong))
+                        response.headers['Referrer-Policy'] = 'no-referrer'
+                        return response
+            except:
+                pass
             currentSong = recommenderManager.randomSong(userId)
+            history.append(currentSong)
+            response = make_response(render_template('music.html', data=currentSong))
+            response.headers['Referrer-Policy'] = 'no-referrer'
+            return response
+
         else:
-            currentSong = recommendations[0]
-        response = make_response(render_template('music.html', data=currentSong))
-        response.headers['Referrer-Policy'] = 'no-referrer'
-        return response
+            try:
+                recommenderManager.updateUserPreferences(userId, currentSong[0], request.form['decide_song_button'].upper())
+                recommendations = recommenderManager.recommendBasedOnPreferences(userId, 3)
+            except TypeError:
+                currentSong = recommenderManager.randomSong(userId)
+                history.append(currentSong)
+                response = make_response(render_template('music.html', data=currentSong))
+                response.headers['Referrer-Policy'] = 'no-referrer'
+                return response
+            if recommendations == []:
+                currentSong = recommenderManager.randomSong(userId)
+            else:
+                currentSong = recommendations[0]
+            history.append(currentSong)
+            response = make_response(render_template('music.html', data=currentSong))
+            response.headers['Referrer-Policy'] = 'no-referrer'
+            return response
 
     else:
         currentSong = recommenderManager.randomSong(userId)
+        history.append(currentSong)
         response = make_response(render_template('music.html', data=currentSong))
         response.headers['Referrer-Policy'] = 'no-referrer'
         return response
