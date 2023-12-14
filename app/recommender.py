@@ -78,6 +78,7 @@ class Recommender:
                     recommendedSongId = self.df.iloc[i]['id']
                     if recommendedSongId not in likedSongs and recommendedSongId not in dislikedSongs:
                         recommendedSongData = self.df.iloc[i]
+                        recommendedSongData = recommendedSongData.tolist()
                         recommendations.append(recommendedSongData)
                         if len(recommendations) >= topN:
                             break
