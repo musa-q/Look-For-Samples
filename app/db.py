@@ -1,6 +1,6 @@
 import sqlite3
-from config import  COLOR
-from track import Track
+from .config import COLOR
+from .track import Track
 
 class db:
     def __init__(self):

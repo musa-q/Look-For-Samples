@@ -2,7 +2,7 @@ import time
 import discogs_client
 import os
 from dotenv import load_dotenv, set_key
-from config import COLOR
+from .config import COLOR
 
 class DiscogsAccess:
     def __init__(self):

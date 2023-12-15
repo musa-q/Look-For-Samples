@@ -1,11 +1,11 @@
 import sqlite3
 import time
-from discogsAccess import discogsManager
+from .discogsAccess import discogsManager
 from discogs_client.exceptions import HTTPError
 import json
-from config import COLOR, loadingBar
-from track import Track
-from db import dbManager
+from .config import COLOR, loadingBar
+from .track import Track
+from .db import dbManager
 
 def get_tracks(startPage=1, endPage=5):
     if startPage > endPage:
