@@ -2,8 +2,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-from config import COLOR
-from db import dbManager
+from .config import COLOR
+from .db import dbManager
 import joblib
 
 '''''

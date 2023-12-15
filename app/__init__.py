@@ -1,6 +1,6 @@
-from db import dbManager
+from .db import dbManager
 import argparse
-from populateDb import populateTracks
+from .populateDb import populateTracks
 
 def setup():
     dbManager.create()

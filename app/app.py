@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, g, send_file, make_response
-from recommender import recommenderManager
-from db import dbManager
+from .recommender import recommenderManager
+from .db import dbManager
 
 
 app = Flask(__name__, static_url_path='/static')
