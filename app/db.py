@@ -11,7 +11,7 @@ class db:
     def connect(self):
         self.connection = sqlite3.connect(self.dbName)
         self.cursor = self.connection.cursor()
-        print(f"{ COLOR.GREEN}[Connected to database]{ COLOR.ENDC} {self.dbName}")
+        # print(f"{ COLOR.GREEN}[Connected to database]{ COLOR.ENDC} {self.dbName}")
 
     def disconnect(self):
         try:
