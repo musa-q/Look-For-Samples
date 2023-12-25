@@ -1,0 +1,7 @@
+www.lookforsamples.com {
+	redir https://lookforsamples.com{uri}
+}
+
+lookforsamples.com {
+	reverse_proxy localhost:8000
+}

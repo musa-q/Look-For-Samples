@@ -78,4 +78,4 @@ def music():
 
 if __name__ == '__main__':
     currentSong = None
-    app.run(debug=True)
+    app.run()
