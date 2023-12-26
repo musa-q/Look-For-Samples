@@ -58,8 +58,8 @@ class Recommender:
             print(f"{COLOR.FAIL}[Error]{COLOR.ENDC} No user preferences found")
             return
 
-        likedSongs = user_preferences['likes']
-        dislikedSongs = user_preferences['dislikes']
+        likedSongs = self.session.get('userPreferences', {}).get('likes', [])
+        dislikedSongs = self.session.get('userPreferences', {}).get('dislikes', [])
 
         recommendations = []
         for songId in likedSongs:
@@ -70,7 +70,6 @@ class Recommender:
                     recommendedSongId = self.df.iloc[i]['id']
                     if recommendedSongId not in likedSongs and recommendedSongId not in dislikedSongs:
                         recommendedSongData = self.df.iloc[i].to_dict()
-                        # Convert int64 types to standard Python types
                         recommendedSongData = {k: int(v) if isinstance(v, np.int64) else v for k, v in recommendedSongData.items()}
                         recommendations.append(recommendedSongData)
                         if len(recommendations) >= topN:
@@ -94,8 +93,6 @@ class Recommender:
             recommendedSongId = song[0]
             if recommendedSongId not in likedSongs and recommendedSongId not in dislikedSongs:
                 return song
-
-
 
 recommenderManager = Recommender()
 recommenderManager.setup()

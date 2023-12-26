@@ -40,16 +40,16 @@ def music():
         if request.form['decide_song_button'].upper() == 'SKIP':
             try:
                 for track in recommendations:
-                    if track not in user_session.get_user_history():
+                    if track not in user_session.getUserHistory():
                         currentSong = track
-                        user_session.add_to_user_history(currentSong)
+                        user_session.addToUserHistory(currentSong)
                         response = make_response(render_template('music.html', data=currentSong))
                         response.headers['Referrer-Policy'] = 'no-referrer'
                         return response
             except:
                 pass
             currentSong = recommenderManager.randomSong()
-            user_session.add_to_user_history(currentSong)
+            user_session.addToUserHistory(currentSong)
             response = make_response(render_template('music.html', data=currentSong))
             response.headers['Referrer-Policy'] = 'no-referrer'
             return response
@@ -60,7 +60,7 @@ def music():
                 recommendations = recommenderManager.recommendBasedOnPreferences(3)
             except TypeError:
                 currentSong = recommenderManager.randomSong()
-                user_session.add_to_user_history(currentSong)
+                user_session.addToUserHistory(currentSong)
                 response = make_response(render_template('music.html', data=currentSong))
                 response.headers['Referrer-Policy'] = 'no-referrer'
                 return response
@@ -70,19 +70,19 @@ def music():
             else:
                 currentSong = recommendations[0]
 
-            user_session.add_to_user_history(currentSong)
+            user_session.addToUserHistory(currentSong)
             response = make_response(render_template('music.html', data=currentSong))
             response.headers['Referrer-Policy'] = 'no-referrer'
             return response
 
     else:
         current_song = recommenderManager.randomSong()
-        user_session.add_to_user_history(current_song)
+        user_session.addToUserHistory(current_song)
 
         recommendations = recommenderManager.recommendBasedOnPreferences(3)
 
-        user_session.set_current_song(current_song)
-        user_session.set_recommendations(recommendations)
+        user_session.setCurrentSong(current_song)
+        user_session.setRecommendations(recommendations)
 
         response = make_response(render_template('music.html', data=current_song))
         response.headers['Referrer-Policy'] = 'no-referrer'
