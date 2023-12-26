@@ -90,7 +90,22 @@ body {
 
 @media (max-width: 480px) {
     .music-box {
-        width: 90%;
-        height: 60%;
+        width: 80%;
+        height: 80%;
+    }
+
+    .music-box .btn-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .music-box .btn-group input[type="submit"] {
+        width: 70%;
+        margin: 2% 0;
+    }
+
+    .music-box iframe {
+        margin-top: 20%;
+        height: 100%;
     }
 }
