@@ -27,8 +27,39 @@
                 <input type="submit" name="decide_song_button" value="DISLIKE">
                 <input type="submit" name="decide_song_button" value="SKIP">
                 <input type="submit" name="decide_song_button" value="LIKE">
+                <div id="confirmationMessage">
+                    <div id="reportButton" onclick="reportTrack()">
+                        Report
+                    </div>
+                </div>
             </div>
         </form>
     </div>
+
+    <script>
+        function reportTrack() {
+            var currentSong = {
+                id: "{{ data[0] }}",
+                artist: "{{ data[2] }}",
+                title: "{{ data[1] }}",
+                videoId: "https://www.youtube.com/watch?v={{ data[8][-11:] }}",
+            };
+            var jsonString = JSON.stringify(currentSong);
+
+            fetch('/report-track', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `current_track=${jsonString}`,
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("confirmationMessage").innerHTML = data;
+                document.getElementById("reportButton").style.display = "none";
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>

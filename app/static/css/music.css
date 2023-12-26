@@ -88,6 +88,23 @@ body {
     margin-top: 10px;
 }
 
+.music-box #reportButton {
+    margin-top: 3%;
+    color: #ff0000;
+    text-decoration: underline;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    transition: color 0.3s ease;
+    font-size: small;
+}
+
+.music-box #reportButton:hover {
+    color: #cc0000;
+}
+
+
 @media (max-width: 480px) {
     .music-box {
         width: 80%;
