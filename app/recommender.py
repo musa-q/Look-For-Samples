@@ -1,32 +1,20 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
+from flask import session
 import numpy as np
 from .config import COLOR
 from .db import dbManager
-import joblib
-
-'''''
-Make it that it gives random ones at first then looks at history and recommends
-Rather than just looking at current song
-'''''
 
 class Recommender:
     def __init__(self):
         self.df = None
         self.similarityMatrix = None
-        self.userPreferences = {}
-        # self.matrixFilename = "similarityMatrix.pkl"
 
     def setup(self):
         df = pd.read_sql_query("SELECT * FROM tracks", dbManager.connection)
         print(f"{COLOR.GREEN}[Gathered data from database]{COLOR.ENDC}")
         self.df = df.copy()
-        # try:
-        #     # Try to load the similarity matrix from a file
-        #     self.similarityMatrix = joblib.load(self.matrixFilename)
-        #     print(f"{COLOR.GREEN}[Loaded similarity matrix from file]{COLOR.ENDC} {self.matrixFilename}")
-        # except:
         dfEncoded = df.copy()
         labelEncoder = LabelEncoder()
         dfEncoded['artist'] = labelEncoder.fit_transform(dfEncoded['artist'])
@@ -48,26 +36,30 @@ class Recommender:
         # Calculate cosine similarity with the updated features
         self.similarityMatrix = cosine_similarity(finalFeatures)
 
-            # joblib.dump(self.similarityMatrix, self.matrixFilename)
-            # print(f"{COLOR.GREEN}[Saved similarity matrix to file]{COLOR.ENDC} {self.matrixFilename}")
+    def updateUserPreferences(self, songId, likeDislike):
+        userPreferences = session.get('userPreferences', {})
 
-
-    def updateUserPreferences(self, userId, songId, likeDislike):
-        if userId not in self.userPreferences:
-            self.userPreferences[userId] = {'likes': [], 'dislikes': []}
+        if 'likes' not in userPreferences:
+            userPreferences['likes'] = []
+        if 'dislikes' not in userPreferences:
+            userPreferences['dislikes'] = []
 
         if likeDislike == 'LIKE':
-            self.userPreferences[userId]['likes'].append(songId)
+            userPreferences['likes'].append(songId)
         elif likeDislike == 'DISLIKE':
-            self.userPreferences[userId]['dislikes'].append(songId)
+            userPreferences['dislikes'].append(songId)
 
-    def recommendBasedOnPreferences(self, userId, topN):
-        if userId not in self.userPreferences:
+        session['userPreferences'] = userPreferences
+
+    def recommendBasedOnPreferences(self, topN):
+        user_preferences = session.get('userPreferences', {})
+
+        if 'likes' not in user_preferences:
             print(f"{COLOR.FAIL}[Error]{COLOR.ENDC} No user preferences found")
             return
 
-        likedSongs = self.userPreferences[userId]['likes']
-        dislikedSongs = self.userPreferences[userId]['dislikes']
+        likedSongs = self.session.get('userPreferences', {}).get('likes', [])
+        dislikedSongs = self.session.get('userPreferences', {}).get('dislikes', [])
 
         recommendations = []
         for songId in likedSongs:
@@ -77,8 +69,8 @@ class Recommender:
                 for i, score in similarSongs:
                     recommendedSongId = self.df.iloc[i]['id']
                     if recommendedSongId not in likedSongs and recommendedSongId not in dislikedSongs:
-                        recommendedSongData = self.df.iloc[i]
-                        recommendedSongData = recommendedSongData.tolist()
+                        recommendedSongData = self.df.iloc[i].to_dict()
+                        recommendedSongData = {k: int(v) if isinstance(v, np.int64) else v for k, v in recommendedSongData.items()}
                         recommendations.append(recommendedSongData)
                         if len(recommendations) >= topN:
                             break
@@ -88,10 +80,10 @@ class Recommender:
         print(f"{COLOR.GREEN}[Song recommendation created]{COLOR.ENDC}")
         return recommendations
 
-    def randomSong(self, userId):
+    def randomSong(self):
         try:
-            likedSongs = self.userPreferences[userId]['likes']
-            dislikedSongs = self.userPreferences[userId]['dislikes']
+            likedSongs = session.get('userPreferences', {}).get('likes', [])
+            dislikedSongs = session.get('userPreferences', {}).get('dislikes', [])
         except KeyError:
             likedSongs = {}
             dislikedSongs = {}
@@ -101,8 +93,6 @@ class Recommender:
             recommendedSongId = song[0]
             if recommendedSongId not in likedSongs and recommendedSongId not in dislikedSongs:
                 return song
-
-
 
 recommenderManager = Recommender()
 recommenderManager.setup()
