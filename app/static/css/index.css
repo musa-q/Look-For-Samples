@@ -1,4 +1,4 @@
-body {
+/* body {
     font-family: 'Arial', sans-serif;
     background-color: #121212;
 }
@@ -8,7 +8,7 @@ h1 {
     color: #FFFFFF;
     font-size: 50pt;
     text-align: center;
-    /* margin-top: 50px; */
+    /* margin-top: 50px;
 }
 
 .center {
@@ -20,7 +20,7 @@ h1 {
 
 .btn {
     background-color: #3333FF;
-    /*opacity: 0.1;*/
+    opacity: 0.1;
     color: white;
     text-align: center;
     border: none;
@@ -34,7 +34,7 @@ h1 {
 
 .btn:hover {
     background-color: #0000DD;
-    /*opacity: 0.1;*/
+    opacity: 0.1;
     color: white;
     text-align: center;
     border: none;
@@ -44,3 +44,5 @@ h1 {
     width: 200px;
     margin-top: 10%;
 }
+
+*/
