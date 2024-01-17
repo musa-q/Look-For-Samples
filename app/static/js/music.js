@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function reportTrack(currentSong) {
-    console.log(currentSong);
     var jsonString = JSON.stringify(currentSong);
 
     fetch('/report-track', {
