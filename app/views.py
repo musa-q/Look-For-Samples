@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, g, make_response, session
 from .recommender import recommenderManager
 from .db import dbManager
 from .sessionHandler import SessionHandler
-from .track import Track
 import json
 
 views_bp = Blueprint('views', __name__, static_url_path='/static')
