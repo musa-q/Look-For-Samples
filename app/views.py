@@ -88,7 +88,7 @@ def music():
 
 @views_bp.route('/report-track', methods=['POST'])
 def report_track():
-    reported_track = json.loads(request.form.get('current_track'))
+    reported_track = json.loads(request.data.decode('utf-8'))
     save_reported_track(reported_track)
     return "Reported"
 
