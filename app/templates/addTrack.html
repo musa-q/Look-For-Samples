@@ -5,93 +5,120 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Look For Samples</title>
-    <!-- <script src="{{ url_for('static', filename='js/music.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='js/addTrack.js') }}"></script>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
+
+        h1 {
+            padding: 30px;
+        }
+
+        h4 {
+            padding: 3%;
+        }
+
+        .card {
+            max-width: 600px;
+            margin: 0 auto;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .submit {
+            margin-bottom: 5%;
+        }
     </style>
 </head>
 
 <body>
-    <h1>Add a New Track</h1>
+    <div class="container text-center">
 
-    <form id="add-track-form" method="POST">
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Song title</span>
-            <input type="text" class="form-control" placeholder="Song title" aria-label="songName">
+        <h1>Add a New Track</h1>
+
+        <div class="card py-3">
+            <h4>Please fill in all of the following fields</h4>
+            <form id="add-track-form" method="POST">
+                <div class="input-group my-3">
+                    <input type="text" class="form-control" placeholder="Song title" aria-label="songName"
+                        name="songName">
+                    <!-- required> -->
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Artist" aria-label="artistName"
+                        name="artistName">
+                    <!-- required> -->
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Year released" aria-label="yearReleased"
+                        name="yearReleased">
+                    <!-- required> -->
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Country released" aria-label="countryReleased"
+                        name="countryReleased">
+                    <!-- required> -->
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Link to album cover image"
+                        aria-label="imageCoverLink" name="imageCoverLink">
+                    <!-- required> -->
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="YouTube link" aria-label="youtubeLink"
+                        name="youtubeLink">
+                    <!-- required> -->
+                </div>
+
+                <div class="input-group mb-3">
+                    <div>
+                        <input type="text" class="form-control mb-1" placeholder="Style" aria-label="styles"
+                            name="styles" required>
+                        <div id="styles-container"></div>
+                    </div>
+                    <div class="px-1">
+                        <button class="btn btn-outline-secondary" type="button"
+                            onclick="addInput('styles')">Add</button>
+                        <button class="btn btn-outline-secondary" type="button"
+                            onclick="removeInput('styles')">Remove</button>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3 pb-4">
+                    <div>
+                        <input type="text" class="form-control mb-1" placeholder="Genre" aria-label="genres"
+                            name="genres" required>
+                        <div id="genres-container"></div>
+                    </div>
+                    <div class="px-1">
+                        <button class="btn btn-outline-secondary" type="button"
+                            onclick="addInput('genres')">Add</button>
+                        <button class="btn btn-outline-secondary" type="button"
+                            onclick="removeInput('genres')">Remove</button>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="submit btn btn-primary">Submit</button>
+
+            </form>
         </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Artist</span>
-            <input type="text" class="form-control" placeholder="Artist" aria-label="artistName">
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Year released</span>
-            <input type="text" class="form-control" placeholder="Year released" aria-label="yearReleased">
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Country released</span>
-            <input type="text" class="form-control" placeholder="Country released" aria-label="countryReleased">
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Link to album cover image</span>
-            <input type="text" class="form-control" placeholder="Album cover" aria-label="imageCoverLink">
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">YouTube link</span>
-            <input type="text" class="form-control" placeholder="YouTube link" aria-label="youtubeLink">
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Style</span>
-            <div id="styles-container">
-                <input type="text" class="form-control" placeholder="Style" aria-label="styles">
-            </div>
-            <button class="btn btn-outline-secondary" type="button" onclick="addInput('styles')">Add style</button>
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Genre</span>
-            <div id="genres-container">
-                <input type="text" class="form-control" placeholder="Genre" aria-label="genre">
-            </div>
-            <button class="btn btn-outline-secondary" type="button" onclick="addInput('genres')">Add genre</button>
-        </div>
-    </form>
-
-    <script>
-        function addInput(inputType) {
-            var container;
-            var inputContainerId;
-
-            if (inputType === 'styles') {
-                container = document.getElementById('styles-container');
-                inputContainerId = 'styles-container';
-            } else if (inputType === 'genres') {
-                container = document.getElementById('genres-container');
-                inputContainerId = 'genres-container';
-            }
-
-            if (container) {
-                var newInput = document.createElement('div');
-                newInput.className = 'input-group';
-                newInput.innerHTML = `
-                <input type="text" class="form-control" placeholder="${inputType.charAt(0).toUpperCase() + inputType.slice(1)}" aria-label="${inputType}">
-            `;
-                container.appendChild(newInput);
-            } else {
-                console.error(`Container (${inputContainerId}) not found.`);
-            }
-        }
-    </script>
-
+    </div>
 </body>
 
 </html>
