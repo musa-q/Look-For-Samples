@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, g, make_response, session
+from flask import Blueprint, render_template, request, g, make_response, session, jsonify
 from .recommender import recommenderManager
 from .db import dbManager
 from .sessionHandler import SessionHandler
@@ -87,7 +87,7 @@ def music():
 
 @views_bp.route('/report-track', methods=['POST'])
 def report_track():
-    reported_track = request.form.get('current_track')
+    reported_track = json.loads(request.data.decode('utf-8'))
     save_reported_track(reported_track)
     return "Reported"
 
@@ -102,3 +102,28 @@ def save_reported_track(reported_track):
 
     with open('reported_tracks.json', 'w') as json_file:
         json.dump(reported_tracks, json_file)
+
+
+@views_bp.route('/add-track', methods=['GET', 'POST'])
+def add_track():
+    if request.method == 'POST':
+        track_data = json.loads(request.data.decode('utf-8'))
+        if dbManager.checkExisting(track_data['songName'], track_data['artistName']):
+            save_track_to_file(track_data)
+            return jsonify({'success': True, 'message': 'Track request sent successfully!'})
+        else:
+            return jsonify({'success': False, 'message': 'Track already exists. Please provide a unique track.'})
+    return render_template('addTrack.html')
+
+
+def save_track_to_file(track_data):
+    try:
+        with open('track_requests.json', 'r') as json_file:
+            track_requests = json.load(json_file)
+    except FileNotFoundError:
+        track_requests = []
+
+    track_requests.append(track_data)
+
+    with open('track_requests.json', 'w') as json_file:
+        json.dump(track_requests, json_file)

@@ -42,21 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function reportTrack() {
-    var currentSong = {
-        id: "{{ data[0] }}",
-        artist: "{{ data[2] }}",
-        title: "{{ data[1] }}",
-        videoId: "https://www.youtube.com/watch?v={{ data[8][-11:] }}",
-    };
+function reportTrack(currentSong) {
     var jsonString = JSON.stringify(currentSong);
 
     fetch('/report-track', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
         },
-        body: `current_track=${jsonString}`,
+        body: jsonString,
     })
         .then(response => response.text())
         .then(data => {
