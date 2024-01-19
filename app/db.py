@@ -77,9 +77,9 @@ class db:
         for idx, row in enumerate(rows):
             print(f"{COLOR.CYAN}[Row {idx + 1}]{COLOR.ENDC} {row}")
 
-    def getAllTracks(self):
-        rows = self.cursor.execute("SELECT * FROM tracks").fetchall()
-        return rows
+    # def getAllTracks(self):
+    #     rows = self.cursor.execute("SELECT * FROM tracks").fetchall()
+    #     return rows
 
     def countRows(self):
         try:
