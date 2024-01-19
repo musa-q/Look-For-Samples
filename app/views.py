@@ -21,10 +21,10 @@ def teardown_request(exception):
 def index():
     return render_template("index.html")
 
-@views_bp.route('/view-all-tracks')
-def view_all_tracks():
-    all_tracks = dbManager.getAllTracks()
-    return render_template("viewAllTracks.html", data=all_tracks)
+# @views_bp.route('/view-all-tracks')
+# def view_all_tracks():
+#     all_tracks = dbManager.getAllTracks()
+#     return render_template("viewAllTracks.html", data=all_tracks)
 
 
 @views_bp.route('/music', methods=['GET', 'POST'])
