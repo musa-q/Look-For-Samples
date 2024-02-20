@@ -40,7 +40,7 @@
         <div class="box p-4 shadow">
             <h2 class="fs-2 p-3">{{ data[2] }} - {{ data[1] }}</h2>
 
-            <div class="py-2">
+            <div class="pt-2">
                 <iframe class="video" src="https://www.youtube.com/embed/{{ data[8][-11:] }}?autoplay=1&loop=1"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -49,8 +49,12 @@
             </div>
 
             <div class="container">
+                <div class="btn btn-link py-2" id="copyLinkButton"
+                    onclick="copyLink('https://www.youtube.com/watch?v={{ data[8][-11:] }}')">
+                    Copy link
+                </div>
                 <form method="POST">
-                    <div class="btn-group d-flex py-3" role="group">
+                    <div class="btn-group d-flex py-2" role="group">
                         <input class="btn btn-outline-light" type="submit" name="decide_song_button" value="DISLIKE">
                         <input class="btn btn-outline-light" type="submit" name="decide_song_button" value="SKIP">
                         <input class="btn btn-outline-light" type="submit" name="decide_song_button" value="LIKE">

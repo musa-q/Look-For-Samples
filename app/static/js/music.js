@@ -59,3 +59,17 @@ function reportTrack(currentSong) {
         })
         .catch(error => console.error('Error:', error));
 }
+
+function copyLink(link) {
+    var copyButton = document.getElementById("copyLinkButton");
+    navigator.clipboard.writeText(link)
+        .then(() => {
+            copyButton.textContent = "Copied";
+            setTimeout(function () {
+                copyButton.textContent = "Copy text";
+            }, 4000);
+        })
+        .catch((error) => {
+            console.error('Failed to copy: ', error);
+        });
+}
