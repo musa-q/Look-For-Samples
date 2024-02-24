@@ -42,41 +42,39 @@
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form class="form-floating">
-                    <div class="modal-header">
-                        <h4 class="modal-title">How do you feel?</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
+                <div class="modal-header">
+                    <h4 class="modal-title">How do you feel?</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-                    <div class="modal-body">
-                        <div class="d-flex justify-content-center flex-wrap" required>
-                            <label class="m-3">
-                                <input type="radio" name="feedback-faces" value="face-1">
-                                <img src="/static/imgs/feedback_faces_1.png" width="75px" alt="Option 1">
-                            </label>
-                            <label class="m-3">
-                                <input type="radio" name="feedback-faces" value="face-2">
-                                <img src="/static/imgs/feedback_faces_2.png" width="75px" alt="Option 2">
-                            </label>
-                            <label class="m-3">
-                                <input type="radio" name="feedback-faces" value="face-3">
-                                <img src="/static/imgs/feedback_faces_3.png" width="75px" alt="Option 3">
-                            </label>
-                            <label class="m-3">
-                                <input type="radio" name="feedback-faces" value="face-4">
-                                <img src="/static/imgs/feedback_faces_4.png" width="75px" alt="Option 4">
-                            </label>
-                        </div>
-                        <hr class="hr hr-blurry" />
-                        <textarea class="form-control" placeholder="Leave a comment here"
-                            id="floatingTextarea2"></textarea>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center flex-wrap" required>
+                        <label class="m-3">
+                            <input type="radio" name="feedback-faces" value="face-1">
+                            <img src="/static/img/feedback_faces_1.png" width="75px" alt="Option 1">
+                        </label>
+                        <label class="m-3">
+                            <input type="radio" name="feedback-faces" value="face-2">
+                            <img src="/static/img/feedback_faces_2.png" width="75px" alt="Option 2">
+                        </label>
+                        <label class="m-3">
+                            <input type="radio" name="feedback-faces" value="face-3">
+                            <img src="/static/img/feedback_faces_3.png" width="75px" alt="Option 3">
+                        </label>
+                        <label class="m-3">
+                            <input type="radio" name="feedback-faces" value="face-4">
+                            <img src="/static/img/feedback_faces_4.png" width="75px" alt="Option 4">
+                        </label>
                     </div>
+                    <hr class="hr hr-blurry" />
+                    <textarea class="form-control" placeholder="Leave a comment here" id="feedback-comment"></textarea>
+                </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="submitFeedbackForm()"
+                        data-bs-dismiss="modal">Submit</button>
+                </div>
             </div>
         </div>
     </div>

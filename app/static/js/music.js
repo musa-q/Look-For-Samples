@@ -72,3 +72,13 @@ function copyLink(link) {
             console.error('Failed to copy: ', error);
         });
 }
+
+function submitFeedbackForm() {
+    const selectedOption = document.querySelector('input[name="feedback-faces"]:checked');
+    const optionValue = selectedOption ? selectedOption.value : null;
+
+    const comment = document.getElementById('feedback-comment').value;
+
+    console.log("Selected option:", optionValue);
+    console.log("Comment:", comment)
+}
