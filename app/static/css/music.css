@@ -6,6 +6,19 @@ body {
     justify-content: center;
 }
 
+#open-feedback-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    font-size: larger;
+    border: 2px solid #f1f1f1;
+    background-color: rgb(30, 30, 30);
+    color: white;
+}
+
 .box {
     max-width: 450px;
     margin: 0 auto;
