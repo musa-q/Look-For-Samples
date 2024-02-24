@@ -55,7 +55,6 @@ function reportTrack(currentSong) {
         .then(response => response.text())
         .then(data => {
             document.getElementById("confirmationMessage").innerHTML = data;
-            document.getElementById("reportButton").style.display = "none";
         })
         .catch(error => console.error('Error:', error));
 }
