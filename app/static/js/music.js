@@ -74,11 +74,25 @@ function copyLink(link) {
 }
 
 function submitFeedbackForm() {
+    const toastLiveExample = document.getElementById('liveToast');
     const selectedOption = document.querySelector('input[name="feedback-faces"]:checked');
     const optionValue = selectedOption ? selectedOption.value : null;
-
     const comment = document.getElementById('feedback-comment').value;
+    var jsonString = JSON.stringify({ 'face': optionValue, 'feedback': comment });
 
-    console.log("Selected option:", optionValue);
-    console.log("Comment:", comment)
+    fetch('/add-feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: jsonString,
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            document.getElementById("toast-body-text").innerHTML = data.message;
+            toastBootstrap.show()
+        })
+        .catch(error => console.error('Error:', error));
 }

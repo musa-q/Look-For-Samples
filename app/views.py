@@ -88,42 +88,37 @@ def music():
 @views_bp.route('/report-track', methods=['POST'])
 def report_track():
     reported_track = json.loads(request.data.decode('utf-8'))
-    save_reported_track(reported_track)
+    save_track_to_file(reported_track, 'reported_tracks.json')
     return "Reported"
-
-def save_reported_track(reported_track):
-    try:
-        with open('reported_tracks.json', 'r') as json_file:
-            reported_tracks = json.load(json_file)
-    except FileNotFoundError:
-        reported_tracks = []
-
-    reported_tracks.append(reported_track)
-
-    with open('reported_tracks.json', 'w') as json_file:
-        json.dump(reported_tracks, json_file)
-
 
 @views_bp.route('/add-track', methods=['GET', 'POST'])
 def add_track():
     if request.method == 'POST':
         track_data = json.loads(request.data.decode('utf-8'))
         if dbManager.checkExisting(track_data['songName'], track_data['artistName']):
-            save_track_to_file(track_data)
+            save_track_to_file(track_data, 'track_requests.json')
             return jsonify({'success': True, 'message': 'Track request sent successfully!'})
         else:
             return jsonify({'success': False, 'message': 'Track already exists. Please provide a unique track.'})
     return render_template('addTrack.html')
 
-
-def save_track_to_file(track_data):
+@views_bp.route('/add-feedback', methods=['POST'])
+def add_feedback():
+    feedback_info = json.loads(request.data.decode('utf-8'))
     try:
-        with open('track_requests.json', 'r') as json_file:
-            track_requests = json.load(json_file)
+        save_track_to_file(feedback_info, 'feedback.json')
+    except:
+        return jsonify({'success': False, 'message': 'Error with sending'})
+    return jsonify({'success': True, 'message': 'Sent feedback'})
+
+def save_track_to_file(track_data, filename):
+    try:
+        with open(filename, 'r') as json_file:
+            temp_req = json.load(json_file)
     except FileNotFoundError:
-        track_requests = []
+        temp_req = []
 
-    track_requests.append(track_data)
+    temp_req.append(track_data)
 
-    with open('track_requests.json', 'w') as json_file:
-        json.dump(track_requests, json_file)
+    with open(filename, 'w') as json_file:
+        json.dump(temp_req, json_file)

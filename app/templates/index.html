@@ -76,6 +76,14 @@
             </div>
         </div>
     </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body" id="toast-body-text">
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
         <div class="jumbotron text-center m-5 p-3">
             <h1>Look For Samples</h1>
@@ -99,13 +107,27 @@
 
     <script>
         function submitFeedbackForm() {
+            const toastLiveExample = document.getElementById('liveToast');
             const selectedOption = document.querySelector('input[name="feedback-faces"]:checked');
             const optionValue = selectedOption ? selectedOption.value : null;
-
             const comment = document.getElementById('feedback-comment').value;
+            var jsonString = JSON.stringify({ 'face': optionValue, 'feedback': comment });
 
-            console.log("Selected option:", optionValue);
-            console.log("Comment:", comment)
+            fetch('/add-feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonString,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                    document.getElementById("toast-body-text").innerHTML = data.message;
+                    toastBootstrap.show()
+                })
+                .catch(error => console.error('Error:', error));
         }
     </script>
 </body>
