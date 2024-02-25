@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const genreInputs = document.querySelectorAll('[aria-label="genres"]');
         genreInputs.forEach(input => formData.genres.push(input.value));
 
-        console.log(JSON.stringify(formData));
-
         fetch('/add-track', {
             method: 'POST',
             headers: {

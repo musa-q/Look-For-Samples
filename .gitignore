@@ -6,6 +6,7 @@ __pycache__/
 # Outputs
 reported_tracks.json
 track_requests.json
+feedback.json
 
 # Database
 *.db

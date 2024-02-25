@@ -55,7 +55,6 @@ function reportTrack(currentSong) {
         .then(response => response.text())
         .then(data => {
             document.getElementById("confirmationMessage").innerHTML = data;
-            document.getElementById("reportButton").style.display = "none";
         })
         .catch(error => console.error('Error:', error));
 }
@@ -72,4 +71,27 @@ function copyLink(link) {
         .catch((error) => {
             console.error('Failed to copy: ', error);
         });
+}
+
+function submitFeedbackForm() {
+    const toastLiveExample = document.getElementById('liveToast');
+    const selectedOption = document.querySelector('input[name="feedback-faces"]:checked');
+    const optionValue = selectedOption ? selectedOption.value : null;
+    const comment = document.getElementById('feedback-comment').value;
+    var jsonString = JSON.stringify({ 'face': optionValue, 'feedback': comment });
+
+    fetch('/add-feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: jsonString,
+    })
+        .then(response => response.json())
+        .then(data => {
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            document.getElementById("toast-body-text").innerHTML = data.message;
+            toastBootstrap.show()
+        })
+        .catch(error => console.error('Error:', error));
 }
