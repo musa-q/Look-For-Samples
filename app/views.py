@@ -3,6 +3,7 @@ from .recommender import recommenderManager
 from .db import dbManager
 from .sessionHandler import SessionHandler
 import json
+from datetime import datetime
 
 views_bp = Blueprint('views', __name__, static_url_path='/static')
 
@@ -105,6 +106,7 @@ def add_track():
 @views_bp.route('/add-feedback', methods=['POST'])
 def add_feedback():
     feedback_info = json.loads(request.data.decode('utf-8'))
+    feedback_info['time'] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     try:
         save_track_to_file(feedback_info, 'feedback.json')
     except:

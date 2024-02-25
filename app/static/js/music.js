@@ -89,7 +89,6 @@ function submitFeedbackForm() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
             document.getElementById("toast-body-text").innerHTML = data.message;
             toastBootstrap.show()
