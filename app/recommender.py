@@ -5,6 +5,17 @@ from flask import session
 import numpy as np
 from .config import COLOR
 from .db import dbManager
+import logging
+import os
+
+current_dir = os.getcwd()
+logs_dir = os.path.join(current_dir, 'logs')
+if not os.path.exists(logs_dir):
+    os.makedirs(logs_dir)
+log_file_path = os.path.join(logs_dir, 'users.log')
+logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.info('Waiting for users...')
+
 
 class Recommender:
     def __init__(self):
@@ -51,11 +62,12 @@ class Recommender:
 
         session['userPreferences'] = userPreferences
 
-    def recommendBasedOnPreferences(self, topN):
+    def recommendBasedOnPreferences(self, topN, ip_address):
         user_preferences = session.get('userPreferences', {})
 
         if 'likes' not in user_preferences:
             print(f"{COLOR.FAIL}[Error]{COLOR.ENDC} No user preferences found")
+            logging.info(f'User joined from {ip_address}')
             return
 
         likedSongs = self.session.get('userPreferences', {}).get('likes', [])
