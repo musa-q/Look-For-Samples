@@ -4,8 +4,20 @@ from .db import dbManager
 from .sessionHandler import SessionHandler
 import json
 from datetime import datetime
+import logging
+import os
 
 views_bp = Blueprint('views', __name__, static_url_path='/static')
+
+
+current_dir = os.getcwd()
+logs_dir = os.path.join(current_dir, 'logs')
+if not os.path.exists(logs_dir):
+    os.makedirs(logs_dir)
+log_file_path = os.path.join(logs_dir, 'app.log')
+logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.info('Starting server...')
+
 
 @views_bp.before_request
 def before_request():
@@ -31,6 +43,8 @@ def index():
 @views_bp.route('/music', methods=['GET', 'POST'])
 def music():
     user_session = SessionHandler(session)
+    ip_address = request.remote_addr
+    logging.info(f'User joined from {ip_address} at {datetime.now()}')
     currentSong = None
     recommendations = []
 
