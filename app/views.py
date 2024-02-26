@@ -31,6 +31,7 @@ def index():
 @views_bp.route('/music', methods=['GET', 'POST'])
 def music():
     user_session = SessionHandler(session)
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     currentSong = None
     recommendations = []
 
@@ -55,7 +56,7 @@ def music():
         else:
             try:
                 recommenderManager.updateUserPreferences(currentSong[0], request.form['decide_song_button'].upper())
-                recommendations = recommenderManager.recommendBasedOnPreferences(3)
+                recommendations = recommenderManager.recommendBasedOnPreferences(3, ip_address)
             except TypeError:
                 currentSong = recommenderManager.randomSong()
                 user_session.addToUserHistory(currentSong)
@@ -77,7 +78,7 @@ def music():
         current_song = recommenderManager.randomSong()
         user_session.addToUserHistory(current_song)
 
-        recommendations = recommenderManager.recommendBasedOnPreferences(3)
+        recommendations = recommenderManager.recommendBasedOnPreferences(3, ip_address)
 
         user_session.setCurrentSong(current_song)
         user_session.setRecommendations(recommendations)
