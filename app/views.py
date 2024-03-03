@@ -16,7 +16,6 @@ if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)
 log_file_path = os.path.join(logs_dir, 'app.log')
 logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(message)s')
-logging.info('Starting server...')
 
 
 @views_bp.before_request
