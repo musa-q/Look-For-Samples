@@ -1,15 +1,3 @@
-body {
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FEFDE9;
-    background-color: #343a41;
-    user-select: none;
-    font-family: 'Roboto';
-}
-
 .modal-content {
     color: #FEFDE9;
     background-color: #343a41;
@@ -88,7 +76,7 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background-image: url('record.png');
+    background-image: url('/static/img/record.png');
     background-size: cover;
     background-position: center;
 }
