@@ -13,27 +13,7 @@
         crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1981017738423084"
         crossorigin="anonymous"></script>
-    <style>
-        .btn {
-            font-size: large;
-        }
-
-        [type=radio] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        [type=radio]+img {
-            cursor: pointer;
-        }
-
-        [type=radio]:checked+img {
-            outline: 4px solid rgb(255, 255, 255);
-            border-radius: 50%;
-        }
-    </style>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
 </head>
 
 <body>
@@ -85,27 +65,50 @@
     </div>
 
     <div class="container-fluid">
-        <div class="jumbotron text-center m-5 p-3">
-            <h1>Look For Samples</h1>
+        <div class="pb-2">
+            <h1 class="text">Look For Samples</h1>
         </div>
 
-        <div class="d-grid gap-4 col-9 mx-auto">
-            <button class="btn btn-primary m-2 p-2" type="button"
-                onclick="window.location.href='{{ url_for('views.music') }}';">
-                Find samples
-            </button>
-            <button class="btn btn-secondary m-2 p-2" type="button"
+        <div class="turntable-container">
+            <div class="turntable">
+                <div class="record" id="rotate-btn"></div>
+            </div>
+        </div>
+
+
+        <div class="button-wrapper d-flex justify-content-center flex-wrap pt-3">
+            <div class="option-button mx-5 m-3" type="button"
                 onclick="window.location.href='{{ url_for('views.add_track') }}';">
                 Add track
-            </button>
-            <button class="btn btn-secondary m-2 p-2" type="button" id="open-feedback-btn" data-bs-toggle="modal"
+            </div>
+            <div class="option-button button-big mx-5 m-3" type="button"
+                onclick="window.location.href='{{ url_for('views.music') }}';">
+                Find samples
+            </div>
+            <div class="option-button mx-5 m-3" type="button" id="open-feedback-btn" data-bs-toggle="modal"
                 data-bs-target="#feedback-modal">
                 Feedback
-            </button>
+            </div>
         </div>
     </div>
 
     <script>
+        const turntable = document.querySelector('.turntable');
+        const rotateButton = document.getElementById('rotate-btn');
+
+        let isRotating = false;
+
+        rotateButton.addEventListener('click', () => {
+            if (!isRotating) {
+                turntable.style.transform = 'rotate(720deg)';
+                isRotating = true;
+            } else {
+                turntable.style.transform = 'rotate(0deg)';
+                isRotating = false;
+            }
+        });
+
+
         function submitFeedbackForm() {
             const toastLiveExample = document.getElementById('liveToast');
             const selectedOption = document.querySelector('input[name="feedback-faces"]:checked');
