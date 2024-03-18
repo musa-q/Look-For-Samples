@@ -3,7 +3,11 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Look For Samples</title>
+    <title>Sample: {data[1]}</title>
+    <meta name="description"
+        content="Recommended musical sample based on your likes and dislikes through using AI">
+    <meta name="og:title" property="og:title" content="Look For Samples">
+    <meta name="twitter:card" content="A website where you will easily be recommended music samples based on your musical preferences using AI">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <script src="{{ url_for('static', filename='js/music.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/music.css') }}">
@@ -89,11 +93,12 @@
 
     <div class="container text-center">
         <div class="box p-4 shadow">
-            <h2 class="fs-2 p-3">{{ data[2] }} - {{ data[1] }}</h2>
+            <h1 class="fs-2 p-3">{{ data[2] }} - {{ data[1] }}</h1>
 
             <div class="pt-2">
                 <iframe class="video" src="https://www.youtube.com/embed/{{ data[8][-11:] }}?autoplay=1&loop=1"
                     title="YouTube video player" frameborder="0"
+                    alt="Recommened music track based on your preferences, recommended with AI"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
