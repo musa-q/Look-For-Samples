@@ -3,11 +3,11 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sample: {data[1]}</title>
-    <meta name="description"
-        content="Recommended musical sample based on your likes and dislikes through using AI">
+    <title>Sample: {{data[1]}} by {{ data[2] }}</title>
+    <meta name="description" content="Recommended musical sample based on your likes and dislikes through using AI">
     <meta name="og:title" property="og:title" content="Look For Samples">
-    <meta name="twitter:card" content="A website where you will easily be recommended music samples based on your musical preferences using AI">
+    <meta name="twitter:card"
+        content="A website where you will easily be recommended music samples based on your musical preferences using AI">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <script src="{{ url_for('static', filename='js/music.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/music.css') }}">
