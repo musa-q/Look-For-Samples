@@ -21,6 +21,16 @@
 
 .container-fluid {
     text-align: center;
+    padding: 20px;
+    max-width: 100%;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 1rem;
 }
 
 .option-button {
@@ -28,17 +38,20 @@
     background: linear-gradient(225deg, #383e46, #2f343b);
     box-shadow: -7px 7px 14px #292d33,
         7px -7px 14px #3f474f;
-    height: 100px;
-    width: 100px;
+    height: 60px;
+    width: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: large;
+    font-size: 12px;
+    padding: 8px;
+    text-align: center;
+    margin: 0;
 }
 
 .button-big {
-    height: 120px;
-    width: 120px;
+    height: 80px;
+    width: 80px;
 }
 
 .turntable-container {
@@ -87,4 +100,18 @@
 
 .text {
     font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .option-button {
+        height: 80px;
+        width: 80px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .button-big {
+        height: 100px;
+        width: 100px;
+    }
 }

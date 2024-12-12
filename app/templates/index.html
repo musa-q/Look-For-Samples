@@ -98,16 +98,13 @@
 
 
         <div class="button-wrapper d-flex justify-content-center flex-wrap pt-3">
-            <div class="option-button mx-5 m-3" type="button"
-                onclick="window.location.href='{{ url_for('views.add_track') }}';">
+            <div class="option-button m-3" type="button" onclick="window.location.href='{{ url_for('views.add_track') }}';">
                 Add track
             </div>
-            <div class="option-button button-big mx-5 m-3" type="button"
-                onclick="window.location.href='{{ url_for('views.music') }}';">
+            <div class="option-button button-big m-3" type="button" onclick="window.location.href='{{ url_for('views.music') }}';">
                 Find samples
             </div>
-            <div class="option-button mx-5 m-3" type="button" id="open-feedback-btn" data-bs-toggle="modal"
-                data-bs-target="#feedback-modal">
+            <div class="option-button m-3" type="button" id="open-feedback-btn" data-bs-toggle="modal" data-bs-target="#feedback-modal">
                 Feedback
             </div>
         </div>
