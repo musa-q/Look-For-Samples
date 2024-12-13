@@ -5,4 +5,4 @@ numpy==1.24.3
 pandas==2.0.1
 python-dotenv==1.0.0
 scikit_learn==1.2.2
-waitress==2.1.2
+waitress==3.0.1
